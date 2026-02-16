@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-pip install pandas logomaker pysam openpyxl cutadapt bwa samtools
 
+
+CHANGE FILE PATHS, COPY AND PASTE IN TERMINAL
+
+Single-sample mode:
 python 02032026_map_insertions.py \
     --fastq <your_fastq> \
     --ref <your_ref> \
@@ -13,6 +16,16 @@ Bulk mode (Excel):
 python 02032026_map_insertions.py \
     --xlsx /Users/ecreed/Desktop/02032026_tagmentationAnalysis/recap_noQC_W1DN1_fastq_input.xlsx \
     --sheet Sheet1 \
+    --min-mapq 30
+
+Bulk mode (auto-detect FASTQ in folder):
+python 02032026_map_insertions.py \
+    --fastq-dir /path/to/fastqs \
+    --fastq-pattern "*_S*_L001_merged*.fastq*" \
+    --ref <your_ref> \
+    --outdir <your_outdir> \
+    --donor-seq <your_donor_seq> \
+    --donor-side 5p \
     --min-mapq 30
 
 Map donor–genome junction reads to a reference genome and call insertion coordinates per read.
@@ -264,9 +277,12 @@ def run_one_sample(
 def main():
     ap = argparse.ArgumentParser()
 
-    # Either single-sample CLI args, OR Excel bulk mode
+    # Either single-sample CLI args, OR Excel bulk mode, OR folder auto-detect mode
     ap.add_argument("--xlsx", type=Path, help="Excel file with columns: fastq, ref, outdir, donor-seq, donor-side")
     ap.add_argument("--sheet", default="Sheet1", help="Excel sheet name (default: Sheet1)")
+
+    ap.add_argument("--fastq-dir", type=Path, help="Folder of FASTQ files to auto-detect.")
+    ap.add_argument("--fastq-pattern", default="*_S*_L001_merged*.fastq*", help="Glob pattern inside fastq-dir.")
 
     ap.add_argument("--fastq", type=Path, help="Merged FASTQ (single-end).")
     ap.add_argument("--ref", type=Path, help="Reference genome FASTA (E. coli).")
@@ -327,9 +343,36 @@ def main():
             )
         return
 
+    if args.fastq_dir is not None:
+        if args.ref is None or args.outdir is None or args.donor_seq is None:
+            raise SystemExit("[error] For --fastq-dir mode, provide --ref, --outdir, and --donor-seq.")
+
+        fastq_dir = args.fastq_dir.expanduser().resolve()
+        fastq_files = sorted(fastq_dir.glob(args.fastq_pattern))
+        if not fastq_files:
+            raise SystemExit(f"[error] No FASTQ files found in {fastq_dir} with pattern {args.fastq_pattern}")
+
+        for fastq in fastq_files:
+            sample_outdir = args.outdir / fastq.stem
+            print(f"\n=== Sample {fastq.name} ===")
+            run_one_sample(
+                fastq=fastq,
+                ref=args.ref,
+                outdir=sample_outdir,
+                donor_seq=args.donor_seq,
+                donor_side=args.donor_side,
+                min_len=args.min_len,
+                error_rate=args.error_rate,
+                cores=args.cores,
+                min_mapq=args.min_mapq,
+                primary_only=args.primary_only,
+                indexed_refs=indexed_refs,
+            )
+        return
+
     # Single-sample mode (original behavior)
     if args.fastq is None or args.ref is None or args.outdir is None or args.donor_seq is None:
-        raise SystemExit("[error] Provide either --xlsx (bulk mode) OR --fastq/--ref/--outdir/--donor-seq (single-sample).")
+        raise SystemExit("[error] Provide either --xlsx (bulk mode), --fastq-dir (auto-detect), or --fastq/--ref/--outdir/--donor-seq (single-sample).")
 
     run_one_sample(
         fastq=args.fastq,
