@@ -1,1 +1,60 @@
-# 02162026_ForSam_TagmentationAnalysis
+# TagmentationAnalysis
+
+This Jupyter notebook analyzes tagmentation sequencing data, performing alignment, quantification, and visualization of insertion patterns. It is designed to be modular and adaptable to different experimental setups.
+
+## Features
+
+- Aligns reads to reference sequences using `bbmap` and `samtools`
+- Extracts and quantifies integration indices
+- Plots strand-specific insertion site histograms
+- Outputs plots and data summaries to a specified directory
+
+## Getting Started
+
+### Installation
+
+Clone this repository and create a new conda environment:
+
+# STEP1 create env
+conda create -n tagmentation python=3.10 -c conda-forge -c bioconda -y
+conda activate tagmentation
+
+# STEP 2 python libs for TSV + plotting + notebook
+conda install -c conda-forge pandas numpy matplotlib biopython logomaker openpyxl jupyterlab notebook
+# STEP 3 mapping / NGS tools
+conda install -c bioconda bwa samtools
+
+# STEP 4 pysam sometimes easier via pip
+pip install pysam cutadapt
+
+## Launch the Notebook
+
+Activate the environment and launch Jupyter:
+
+jupyter notebook
+
+If you encounter an architecture-related error, try:
+
+PYTHONNOUSERSITE=1 conda run -n integration_env jupyter notebook
+
+Then, navigate to the location of the notebook and open CAST_TagmentationNotebook.ipynb.
+
+## Usage
+
+1. Modify the input parameters (e.g., input FASTA/FASTQ files, output directory) where comments specify in the notebook.
+
+2. Run each cell sequentially.
+
+3. Output files including histograms and processed data will be saved in the specified output directory.
+
+## Dependencies
+
+This notebook requires the following packages (automatically installed with the conda environment above):
+
+biopython
+matplotlib
+numpy
+bbmap
+samtools
+notebook
+jupyterlab
