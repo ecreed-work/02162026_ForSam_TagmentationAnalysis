@@ -12,7 +12,7 @@ python map_insertions.py \
 
 Bulk mode (Excel/CSV):
 python map_insertions.py \
-    --xlsx /Users/ecreed/Desktop/KelloggRotation/forSam_Tagmentation_Analysis/map_insertions_fastqPath.csv \
+    --xlsx /Users/ecreed/Desktop/KelloggRotation/forSam_Tagmentation_Analysis/260220_fastqinput.xlsx \
     --sheet Sheet1 \
     --min-mapq 30
 
