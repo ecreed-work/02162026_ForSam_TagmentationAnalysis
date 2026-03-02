@@ -43,6 +43,22 @@ PYTHONNOUSERSITE=1 conda run -n integration_env jupyter notebook
 Then, navigate to the location of the notebook and open CAST_TagmentationNotebook.ipynb.
 
 ## Usage
+First use map_insertions_template.xlsx
+    replace path to fastq files (these come from MiSeq)
+    Change reference genome file path
+    indicate path to directory you would like tsv files to be output to
+
+Start with map_insertions.py
+    at top of script, there is a commented out section
+    this section contains commands you can edit, copy, and paste into the terminal
+    replace path to xlsx file with your own, tells the code how to find fastq files from miseq and where to place output tsv files
+
+Once insertions have been mapped, tsv_analysis.ipynb
+    Select bulk or small scale input
+    run cells to generate insertion profiles based on bulk of small scale use, labeled at top
+    after genome insertion profiles are generated, run remaining cells sequentially
+
+To analyze 
 
 1. Modify the input parameters (e.g., input FASTA/FASTQ files, output directory) where comments specify in the notebook.
 
