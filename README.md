@@ -15,23 +15,28 @@ This Jupyter notebook analyzes tagmentation sequencing data, performing alignmen
 
 Clone this repository and create a new conda environment:
 
-# STEP1 create env
-conda create -n tagmentation python=3.10 -c conda-forge -c bioconda -y
-conda activate tagmentation
+    # STEP1 create env
+    conda create -n tagmentation python=3.10 -c conda-forge -c bioconda -y
+    conda activate tagmentation
 
-# STEP 2 python libs for TSV + plotting + notebook
-conda install -c conda-forge pandas numpy matplotlib biopython logomaker openpyxl jupyterlab notebook
-# STEP 3 mapping / NGS tools
-conda install -c bioconda bwa samtools
+    # STEP 2 python libs for TSV + plotting + notebook
+    conda install -c conda-forge pandas numpy matplotlib biopython logomaker openpyxl jupyterlab notebook
+    # STEP 3 mapping / NGS tools
+    conda install -c bioconda bwa samtools
 
-# STEP 4 pysam sometimes easier via pip
-pip install pysam cutadapt
+    # STEP 4 pysam sometimes easier via pip
+    pip install pysam cutadapt
+
+## Activate conda environment
+Once created, you do not need to follow installation steps. Simply copy and paste:
+
+    conda activate tagmentation
 
 ## Launch the Notebook
 
-Activate the environment and launch Jupyter:
+launch Jupyter:
 
-jupyter notebook
+    jupyter notebook
 
 If you encounter an architecture-related error, try:
 
